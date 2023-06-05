@@ -1,6 +1,6 @@
 # elm-starter
 
-A starter repo for single page elm apps.
+A starter repo for single page elm apps
 
 ## Development
 
