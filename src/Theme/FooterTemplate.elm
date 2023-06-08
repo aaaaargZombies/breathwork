@@ -1,13 +1,14 @@
 module Theme.FooterTemplate exposing (..)
 
-import Html exposing (Html, footer, h2, text)
+import Html exposing (Html, a, footer, p, text)
+import Html.Attributes exposing (href)
 
 
 view : Html msg
 view =
     footer []
-        [ h2
+        [ p
             []
-            [ text "[cCc] Footer"
+            [ a [ href "/settings" ] [ text "[cCc] settings" ]
             ]
         ]

@@ -2,11 +2,15 @@ port module Main exposing (main)
 
 import Browser
 import Browser.Navigation
+import Html exposing (Html)
 import I18n.Keys exposing (Key(..))
 import I18n.Translate exposing (Language(..), translate)
+import Page.FourOhFour
+import Page.Index
+import Page.Settings
 import Route exposing (Route(..))
 import Shared exposing (Model, Msg(..), Phase(..))
-import Theme.PageTemplate as PageTemplate
+import Theme.PageTemplate
 import Time
 import Url
 
@@ -37,7 +41,7 @@ init flags url key =
             Route.fromUrl url
     in
     ( { key = key
-      , page = Maybe.withDefault Index maybeRoute
+      , page = Maybe.withDefault (FourOhFour "oops") maybeRoute
       , language = English
       , pattern = { inhale = 2, exhale = 5, top = 0, bottom = 0 }
       , phase = Inhale 2
@@ -128,4 +132,17 @@ subscriptions model =
 
 viewDocument : Model -> Browser.Document Msg
 viewDocument model =
-    { title = translate model.language SiteTitle, body = [ PageTemplate.view model ] }
+    { title = translate model.language SiteTitle, body = [ view model ] }
+
+
+view : Model -> Html Msg
+view model =
+    case model.page of
+        Index ->
+            Theme.PageTemplate.view model (Page.Index.view model)
+
+        Settings ->
+            Theme.PageTemplate.view model (Page.Settings.view model)
+
+        FourOhFour _ ->
+            Theme.PageTemplate.view model (Page.FourOhFour.view model)
