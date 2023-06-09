@@ -44,6 +44,7 @@ type Msg
     | LinkClicked Browser.UrlRequest
     | Tick Time.Posix
     | PauseUnpause
+    | PatternChanged Pattern
 
 
 patterDecoder : Json.Decode.Decoder Pattern

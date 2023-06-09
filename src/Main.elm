@@ -120,6 +120,9 @@ update msg model =
         PauseUnpause ->
             ( { model | paused = not model.paused }, Cmd.none )
 
+        PatternChanged p ->
+            ( { model | pattern = p }, Cmd.none )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
