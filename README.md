@@ -1,6 +1,6 @@
-# elm-starter
+# breathwork
 
-A starter repo for single page elm apps
+An elm app for breathwork
 
 ## Development
 

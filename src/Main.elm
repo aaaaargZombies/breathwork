@@ -2,11 +2,15 @@ port module Main exposing (main)
 
 import Browser
 import Browser.Navigation
+import Html exposing (Html)
 import I18n.Keys exposing (Key(..))
 import I18n.Translate exposing (Language(..), translate)
+import Page.FourOhFour
+import Page.Index
+import Page.Settings
 import Route exposing (Route(..))
 import Shared exposing (Model, Msg(..), Phase(..))
-import Theme.PageTemplate as PageTemplate
+import Theme.PageTemplate
 import Time
 import Url
 
@@ -37,11 +41,12 @@ init flags url key =
             Route.fromUrl url
     in
     ( { key = key
-      , page = Maybe.withDefault Index maybeRoute
+      , page = Maybe.withDefault (FourOhFour "oops") maybeRoute
       , language = English
-      , pattern = { inhale = 2, exhale = 5, top = 0, bottom = 0 }
-      , phase = Inhale 2
+      , pattern = { inhaleLength = 3, exhaleLength = 6, topLength = 1, bottomLength = 1, topActive = False, bottomActive = False }
+      , phase = Inhale 3
       , paused = True
+      , bpm = 60
       }
     , Cmd.none
     )
@@ -72,49 +77,60 @@ update msg model =
                     )
 
         Tick _ ->
-            case model.phase of
-                Inhale i ->
-                    case i of
-                        0 ->
-                            if model.pattern.top == 0 then
-                                ( { model | phase = Exhale model.pattern.exhale }, noise i )
-
-                            else
-                                ( { model | phase = Top model.pattern.top }, noise i )
-
-                        _ ->
-                            ( { model | phase = Inhale (i - 1) }, noise i )
-
-                Top i ->
-                    case i of
-                        0 ->
-                            ( { model | phase = Exhale model.pattern.exhale }, noise i )
-
-                        _ ->
-                            ( { model | phase = Top (i - 1) }, noise i )
-
-                Exhale i ->
-                    case i of
-                        0 ->
-                            if model.pattern.bottom == 0 then
-                                ( { model | phase = Inhale model.pattern.inhale }, noise i )
-
-                            else
-                                ( { model | phase = Bottom model.pattern.bottom }, noise i )
-
-                        _ ->
-                            ( { model | phase = Exhale (i - 1) }, noise i )
-
-                Bottom i ->
-                    case i of
-                        0 ->
-                            ( { model | phase = Inhale model.pattern.inhale }, noise i )
-
-                        _ ->
-                            ( { model | phase = Bottom (i - 1) }, noise i )
+            onTick model
 
         PauseUnpause ->
             ( { model | paused = not model.paused }, Cmd.none )
+
+        PatternChanged p ->
+            ( { model | pattern = p }, Cmd.none )
+
+        PaceChanged n ->
+            ( { model | bpm = n }, Cmd.none )
+
+
+onTick : Model -> ( Model, Cmd Msg )
+onTick model =
+    case model.phase of
+        Inhale i ->
+            case i of
+                1 ->
+                    if model.pattern.topActive then
+                        ( { model | phase = Top model.pattern.topLength }, noise i )
+
+                    else
+                        ( { model | phase = Exhale model.pattern.exhaleLength }, noise i )
+
+                _ ->
+                    ( { model | phase = Inhale (i - 1) }, noise i )
+
+        Top i ->
+            case i of
+                1 ->
+                    ( { model | phase = Exhale model.pattern.exhaleLength }, noise i )
+
+                _ ->
+                    ( { model | phase = Top (i - 1) }, noise i )
+
+        Exhale i ->
+            case i of
+                1 ->
+                    if model.pattern.bottomActive then
+                        ( { model | phase = Bottom model.pattern.bottomLength }, noise i )
+
+                    else
+                        ( { model | phase = Inhale model.pattern.inhaleLength }, noise i )
+
+                _ ->
+                    ( { model | phase = Exhale (i - 1) }, noise i )
+
+        Bottom i ->
+            case i of
+                1 ->
+                    ( { model | phase = Inhale model.pattern.inhaleLength }, noise i )
+
+                _ ->
+                    ( { model | phase = Bottom (i - 1) }, noise i )
 
 
 subscriptions : Model -> Sub Msg
@@ -123,9 +139,26 @@ subscriptions model =
         Sub.none
 
     else
-        Time.every 1000 Tick
+        let
+            duration =
+                1000 / (model.bpm / 60)
+        in
+        Time.every duration Tick
 
 
 viewDocument : Model -> Browser.Document Msg
 viewDocument model =
-    { title = translate model.language SiteTitle, body = [ PageTemplate.view model ] }
+    { title = translate model.language SiteTitle, body = [ view model ] }
+
+
+view : Model -> Html Msg
+view model =
+    case model.page of
+        Index ->
+            Theme.PageTemplate.view model (Page.Index.view model)
+
+        Settings ->
+            Theme.PageTemplate.view model (Page.Settings.view model)
+
+        FourOhFour _ ->
+            Theme.PageTemplate.view model (Page.FourOhFour.view model)

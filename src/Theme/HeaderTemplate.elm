@@ -1,6 +1,7 @@
 module Theme.HeaderTemplate exposing (..)
 
-import Html exposing (Html, h1, header, text)
+import Html exposing (Html, a, h1, header, text)
+import Html.Attributes exposing (href)
 
 
 type alias HeaderInfo =
@@ -10,8 +11,10 @@ type alias HeaderInfo =
 view : HeaderInfo -> Html msg
 view headerInfo =
     header []
-        [ h1
-            []
-            [ text headerInfo.content
+        [ a [ href "/" ]
+            [ h1
+                []
+                [ text headerInfo.content
+                ]
             ]
         ]
