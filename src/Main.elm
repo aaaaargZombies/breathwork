@@ -141,10 +141,7 @@ subscriptions model =
     else
         let
             duration =
-                (model.bpm / 60) * 1000
-
-            -- _ =
-            --     Debug.log "bpm in millis" (String.fromFloat duration)
+                1000 / (model.bpm / 60)
         in
         Time.every duration Tick
 
