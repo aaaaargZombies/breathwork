@@ -6,7 +6,7 @@ import Shared exposing (Model, Msg)
 
 
 view : Model -> Html Msg
-view model =
+view _ =
     div []
         [ h1 [] [ text "OOOOOPPPSS [cCc]]" ]
         , p []

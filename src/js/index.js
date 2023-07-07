@@ -13,13 +13,13 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 const app = Elm.Main.init({});
 
-const noise = (n) => {
+const noise = (noise) => {
   if (audioCtx) {
     audioCtx.resume();
-    if (n.paused) {
-      n.play();
+    if (noise.paused) {
+      noise.play();
     } else {
-      n.currentTime = 0;
+      noise.currentTime = 0;
     }
   } else {
     console.log("oops not AudioContext");
@@ -27,8 +27,7 @@ const noise = (n) => {
 };
 
 app.ports.noise.subscribe((msg) => {
-  console.log(msg);
-  if (msg === 0) {
+  if (msg === 1) {
     noise(chime1);
   } else {
     noise(chime2);

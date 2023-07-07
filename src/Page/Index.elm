@@ -17,16 +17,16 @@ view model =
         n =
             case model.phase of
                 Inhale i ->
-                    String.fromInt (i + 1)
+                    String.fromInt i
 
                 Top i ->
-                    String.fromInt (i + 1)
+                    String.fromInt i
 
                 Exhale i ->
-                    String.fromInt (i + 1)
+                    String.fromInt i
 
                 Bottom i ->
-                    String.fromInt (i + 1)
+                    String.fromInt i
 
         btnTxt =
             if model.paused then
