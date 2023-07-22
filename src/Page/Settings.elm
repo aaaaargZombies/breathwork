@@ -23,9 +23,6 @@ updatePatternLength pa ph s =
 
             else
                 n
-
-        _ =
-            Debug.log "i is " i
     in
     case ph of
         Inhale _ ->
