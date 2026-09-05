@@ -1,10 +1,14 @@
 {
-  description = "A minimal flake template that you can adapt to your own project";
+  description = "Development environment for a breathwork app";
 
-  inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    elm.url = "github:aaaaargZombies/elm-flake";
+    elm2nix.url = "github:dwayne/elm2nix";
+  };
 
   outputs =
-    { self, ... }@inputs:
+    { self, elm, elm2nix, ... }@inputs:
     let
       inherit (inputs.nixpkgs) lib;
 
@@ -34,6 +38,9 @@
           default = pkgs.mkShellNoCC {
             packages = with pkgs; [
               self.formatter.${system}
+              elm.packages.${system}.default
+              elm2nix.packages.${system}.default
+              pkgs.nodejs_26
             ];
           };
         }
