@@ -1,9 +1,10 @@
 module Main exposing (main)
 
 import Browser
+import BugFix exposing (..)
 import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
-import BugFix exposing (..)
+import Html.Attributes
 
 
 type alias Model =
@@ -32,10 +33,12 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ button [ onClick Increment ] [ text "+1" ]
-        , div [] [ text <| String.fromInt model.count ]
-        , button [ onClick Decrement ] [ text "-1" ]
+    div [ Html.Attributes.id "center"]
+        [ div []
+            [ button [ onClick Increment ] [ text "+1" ]
+            , div [] [ text <| String.fromInt model.count ]
+            , button [ onClick Decrement ] [ text "-1" ]
+            ]
         ]
 
 
