@@ -1,8 +1,13 @@
+import { Elm } from "~/elm/Main.elm";
 import "~/src/style.css";
 import heroImg from "~/src/assets/hero.png";
 import typescriptLogo from "~/src/assets/typescript.svg";
 import viteLogo from "~/src/assets/vite.svg";
 import { setupCounter } from "~/ts/counter.ts";
+
+const app = Elm.Main.init({
+  node: document.querySelector("#elm-app"),
+});
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 <section id="center">
