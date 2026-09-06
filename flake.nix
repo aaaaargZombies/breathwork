@@ -53,6 +53,16 @@
 
       packages = forEachSupportedSystem (
         { pkgs, system }:
+        let
+          inherit (elm2nix.lib.elm2nix pkgs)
+            generateRegistryDat
+            prepareElmHomeScript
+            installPatchesScript
+            ;
+
+          elmLock = ./elm.lock;
+          registryDat = generateRegistryDat { inherit elmLock; };
+        in
         {
           default = pkgs.buildNpmPackage {
             name = "Site";
@@ -62,24 +72,18 @@
               elm2nix.packages.${system}.default
               pkgs.nodejs_26
             ];
-
             src = self;
-
-            npmDeps = pkgs.importNpmLock {
-              npmRoot = self;
-            };
-
+            npmDeps = pkgs.importNpmLock { npmRoot = self; };
             npmConfigHook = pkgs.importNpmLock.npmConfigHook;
 
-            # TODO: add the prepare elm home and patch packages section to this phase
-            # - https://github.com/dwayne/elm2nix/blob/master/nix/build-elm-application.nix
             preBuild = ''
-              echo "🐠 THIS IS THE PREBUILDPHASE 🐠"
-              ls $ELM_HOME
+              ${prepareElmHomeScript { inherit elmLock registryDat; }}
+              ${installPatchesScript elm2nix.lib.elmSafeVirtualDom.elmHtml}
+              # NOTE: hack to fix 0.19.1 -> 0.19.2
+              mv .elm/0.19.1 .elm/0.19.2
             '';
 
             installPhase = ''
-              which elm
               mkdir -p "$out/share"
               cp -R dist/. "$out/share"/
             '';
