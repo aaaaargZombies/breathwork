@@ -31,6 +31,6 @@
 		"noPropertyAccessFromIndexSignature": true
 	},
 	"include": [
-		"src"
+		"ts"
 	]
 }
