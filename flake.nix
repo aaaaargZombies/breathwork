@@ -35,6 +35,17 @@
             };
           }
         );
+
+      perSystem = forEachSupportedSystem (
+        { pkgs, system }:
+        {
+          prepElmHome = pkgs.callPackage ./nix/prep-elm-home.nix {
+            elm2nixLib = elm2nix.lib.elm2nix pkgs;
+            elmLock = ./elm.lock;
+            patches = elm2nix.lib.elmSafeVirtualDom.elmHtml;
+          };
+        }
+      );
     in
     {
       devShells = forEachSupportedSystem (
@@ -46,23 +57,16 @@
               elm.packages.${system}.default
               elm2nix.packages.${system}.default
               pkgs.nodejs_26
+              perSystem.${system}.prepElmHome
             ];
+
+            ELM_HOME = ".elm";
           };
         }
       );
 
       packages = forEachSupportedSystem (
         { pkgs, system }:
-        let
-          inherit (elm2nix.lib.elm2nix pkgs)
-            generateRegistryDat
-            prepareElmHomeScript
-            installPatchesScript
-            ;
-
-          elmLock = ./elm.lock;
-          registryDat = generateRegistryDat { inherit elmLock; };
-        in
         {
           default = pkgs.buildNpmPackage {
             name = "Site";
@@ -71,16 +75,14 @@
               elm.packages.${system}.default
               elm2nix.packages.${system}.default
               pkgs.nodejs_26
+              perSystem.${system}.prepElmHome
             ];
             src = self;
             npmDeps = pkgs.importNpmLock { npmRoot = self; };
             npmConfigHook = pkgs.importNpmLock.npmConfigHook;
 
             preBuild = ''
-              ${prepareElmHomeScript { inherit elmLock registryDat; }}
-              ${installPatchesScript elm2nix.lib.elmSafeVirtualDom.elmHtml}
-              # NOTE: hack to fix 0.19.1 -> 0.19.2
-              mv .elm/0.19.1 .elm/0.19.2
+              prep-elm-home
             '';
 
             installPhase = ''
