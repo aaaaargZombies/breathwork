@@ -8,7 +8,12 @@
   };
 
   outputs =
-    { self, elm, elm2nix, ... }@inputs:
+    {
+      self,
+      elm,
+      elm2nix,
+      ...
+    }@inputs:
     let
       inherit (inputs.nixpkgs) lib;
 
@@ -42,6 +47,42 @@
               elm2nix.packages.${system}.default
               pkgs.nodejs_26
             ];
+          };
+        }
+      );
+
+      packages = forEachSupportedSystem (
+        { pkgs, system }:
+        {
+          default = pkgs.buildNpmPackage {
+            name = "Site";
+
+            nativeBuildInputs = [
+              elm.packages.${system}.default
+              elm2nix.packages.${system}.default
+              pkgs.nodejs_26
+            ];
+
+            src = self;
+
+            npmDeps = pkgs.importNpmLock {
+              npmRoot = self;
+            };
+
+            npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+
+            # TODO: add the prepare elm home and patch packages section to this phase
+            # - https://github.com/dwayne/elm2nix/blob/master/nix/build-elm-application.nix
+            preBuild = ''
+              echo "🐠 THIS IS THE PREBUILDPHASE 🐠"
+              ls $ELM_HOME
+            '';
+
+            installPhase = ''
+              which elm
+              mkdir -p "$out/share"
+              cp -R dist/. "$out/share"/
+            '';
           };
         }
       );
