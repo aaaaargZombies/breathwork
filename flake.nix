@@ -81,6 +81,7 @@
             npmDeps = pkgs.importNpmLock { npmRoot = self; };
             npmConfigHook = pkgs.importNpmLock.npmConfigHook;
 
+            ELM_HOME = ".elm";
             preBuild = ''
               prep-elm-home
             '';
