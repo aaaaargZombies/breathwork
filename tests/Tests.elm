@@ -1,8 +1,8 @@
 module Tests exposing (..)
 
-import Test exposing (Test)
 import Expect
 import Fuzz
+import Test exposing (Test)
 
 
 suite : Test

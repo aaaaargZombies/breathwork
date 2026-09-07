@@ -9,6 +9,9 @@ repl-temp-*
 result
 result-*
 
+# https://github.com/cachix/git-hooks.nix
+/.pre-commit-config.yaml
+
 # vites additions
 # Logs
 logs
