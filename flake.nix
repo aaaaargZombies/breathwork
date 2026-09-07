@@ -55,6 +55,7 @@
             packages = with pkgs; [
               self.formatter.${system}
               elm.packages.${system}.default
+              pkgs.elmPackages.elm-test-rs
               elm2nix.packages.${system}.default
               pkgs.nodejs_26
               perSystem.${system}.prepElmHome
