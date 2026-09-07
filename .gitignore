@@ -24,6 +24,9 @@ dist
 dist-ssr
 *.local
 
+# hegel test stuff
+.hegel
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
