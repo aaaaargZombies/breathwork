@@ -61,7 +61,11 @@
                 ;
             in
             pkgs.mkShellNoCC {
-              inherit shellHook;
+
+              shellHook = shellHook + ''
+                export ELM_HOME="$PWD/.elm"
+              '';
+
               packages =
                 with pkgs;
                 [
@@ -73,8 +77,6 @@
                   perSystem.${system}.prepElmHome
                 ]
                 ++ enabledPackages;
-
-              ELM_HOME = ".elm";
             };
         }
       );
