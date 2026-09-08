@@ -13,4 +13,5 @@ package-lock.json
 
 # build files
 dist
+result
 
