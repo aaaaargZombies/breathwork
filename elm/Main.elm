@@ -1,10 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import BugFix exposing (..)
 import Html exposing (Html, button, div, text)
-import Html.Attributes
 import Html.Events exposing (onClick)
+import Remote
 
 
 type alias Model =
@@ -17,27 +16,34 @@ initialModel _ =
 
 
 type Msg
-    = Increment
-    | Decrement
+    = Play
+    | Stop
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Increment ->
-            ( { model | count = model.count + 1 }, Cmd.none )
+        Play ->
+            ( model
+            , Remote.Play
+                |> Remote.outgoingValue
+                |> Remote.outgoing
+            )
 
-        Decrement ->
-            ( { model | count = model.count - 1 }, Cmd.none )
+        Stop ->
+            ( model
+            , Remote.Stop
+                |> Remote.outgoingValue
+                |> Remote.outgoing
+            )
 
 
 view : Model -> Html Msg
 view model =
-    div [ Html.Attributes.id "center" ]
+    div []
         [ div []
-            [ button [ onClick Increment ] [ text "+1" ]
-            , div [] [ text <| String.fromInt model.count ]
-            , button [ onClick Decrement ] [ text "-1" ]
+            [ button [ onClick Play ] [ text "Play" ]
+            , button [ onClick Stop ] [ text "Stop" ]
             ]
         ]
 
