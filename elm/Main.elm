@@ -3,8 +3,8 @@ module Main exposing (main)
 import Browser
 import BugFix exposing (..)
 import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
 import Html.Attributes
+import Html.Events exposing (onClick)
 
 
 type alias Model =
@@ -33,7 +33,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ Html.Attributes.id "center"]
+    div [ Html.Attributes.id "center" ]
         [ div []
             [ button [ onClick Increment ] [ text "+1" ]
             , div [] [ text <| String.fromInt model.count ]
