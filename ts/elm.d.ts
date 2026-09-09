@@ -22,4 +22,14 @@ declare module "*.elm" {
   };
 }
 
-type Outgoing = { tag: "PLAY"; data: null } | { tag: "STOP"; data: null };
+type Outgoing =
+  | {
+      tag: "PLAY";
+      data: {
+        breatheIn: number;
+        holdIn: number;
+        breatheOut: number;
+        pauseOut: number;
+      };
+    }
+  | { tag: "STOP"; data: null };

@@ -1,6 +1,6 @@
 port module Remote exposing (OutMsg(..), outgoing, outgoingValue)
 
-import Data.Pattern exposing (Pattern)
+import Data.Pattern as Pattern exposing (Pattern)
 import Json.Encode exposing (Value)
 
 
@@ -12,8 +12,8 @@ type OutMsg
 outgoingValue : OutMsg -> { tag : String, data : Value }
 outgoingValue msg =
     case msg of
-        Play _ ->
-            { tag = "PLAY", data = Json.Encode.null }
+        Play pattern ->
+            { tag = "PLAY", data = Pattern.encode pattern }
 
         Stop ->
             { tag = "STOP", data = Json.Encode.null }

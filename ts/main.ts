@@ -11,9 +11,10 @@ Strudel.initStrudel({
 });
 
 if (app.ports && app.ports.outgoing) {
-  app.ports.outgoing.subscribe(async ({ tag }) => {
+  app.ports.outgoing.subscribe(async ({ tag, data }) => {
     switch (tag) {
       case "PLAY":
+        console.log(data);
         Strudel.s("bd sn bd sn, hh*8").play();
         break;
 

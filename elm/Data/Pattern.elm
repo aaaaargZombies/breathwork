@@ -1,5 +1,6 @@
 module Data.Pattern exposing
     ( Pattern
+    , encode
     , getBreatheIn
     , getBreatheOut
     , getHoldIn
@@ -11,6 +12,8 @@ module Data.Pattern exposing
     , withHoldIn
     , withPauseOut
     )
+
+import Json.Encode
 
 
 type Pattern
@@ -114,3 +117,13 @@ withBreatheOutInternal n pattern =
 withPauseOutInternal : Int -> PatternInternal -> PatternInternal
 withPauseOutInternal n pattern =
     { pattern | pauseOut = n }
+
+
+encode : Pattern -> Json.Encode.Value
+encode (Pattern { breatheIn, breatheOut, holdIn, pauseOut }) =
+    Json.Encode.object
+        [ ( "breatheIn", Json.Encode.int breatheIn )
+        , ( "breatheOut", Json.Encode.int breatheOut )
+        , ( "holdIn", Json.Encode.int holdIn )
+        , ( "pauseOut", Json.Encode.int pauseOut )
+        ]
