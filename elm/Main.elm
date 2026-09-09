@@ -31,7 +31,8 @@ update msg model =
     case msg of
         USerPressedPlay ->
             ( model
-            , Remote.Play
+            , model
+                |> Remote.Play
                 |> Remote.outgoingValue
                 |> Remote.outgoing
             )
