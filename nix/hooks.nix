@@ -2,6 +2,7 @@
   pkgs,
   git-hooks,
   system,
+  elm2nix,
 }:
 git-hooks.lib.${system}.run {
   src = ./.;
@@ -19,6 +20,16 @@ git-hooks.lib.${system}.run {
       files = "\\.elm$";
       pass_filenames = false;
       entry = "${pkgs.elmPackages.elm-test-rs}/bin/elm-test-rs";
+    };
+
+    elm-lock = {
+      enable = true;
+      name = "elm-lock";
+      description = "Generate elm.lock";
+      language = "system";
+      files = "elm.json$";
+      pass_filenames = false;
+      entry = "${elm2nix}/bin/elm2nix lock";
     };
 
     ts-test = {

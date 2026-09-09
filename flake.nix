@@ -55,7 +55,11 @@
         {
           default =
             let
-              inherit (import ./nix/hooks.nix { inherit git-hooks pkgs system; })
+              inherit
+                (import ./nix/hooks.nix {
+                  elm2nix = elm2nix.packages.${system}.default;
+                  inherit git-hooks pkgs system;
+                })
                 shellHook
                 enabledPackages
                 ;
