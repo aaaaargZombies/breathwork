@@ -1,21 +1,23 @@
-import { Elm } from "~/elm/Main.elm";
 import * as Strudel from "@strudel/web";
 import "~/css/style.css";
+import { Elm } from "~/elm/Main.elm";
+import * as Sounds from "./sounds.ts";
 
 const app = Elm.Main.init({
   node: document.querySelector("#elm-app"),
 });
 
-Strudel.initStrudel({
-  prebake: () => Strudel.samples("github:tidalcycles/dirt-samples"),
+const repl = await Strudel.initStrudel({
+  prebake: async () => {
+    await Strudel.samples("github:tidalcycles/dirt-samples");
+  },
 });
 
 if (app.ports && app.ports.outgoing) {
   app.ports.outgoing.subscribe(async ({ tag, data }) => {
     switch (tag) {
       case "PLAY":
-        console.log(data);
-        Strudel.s("bd sn bd sn, hh*8").play();
+        Sounds.make(repl.setCps, data).play();
         break;
 
       case "STOP":

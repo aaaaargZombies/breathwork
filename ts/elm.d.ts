@@ -26,10 +26,10 @@ type Outgoing =
   | {
       tag: "PLAY";
       data: {
-        breatheIn: number;
-        holdIn: number;
-        breatheOut: number;
-        pauseOut: number;
+        "0_breatheIn": number;
+        "1_holdIn": number;
+        "2_breatheOut": number;
+        "3_pauseOut": number;
       };
     }
   | { tag: "STOP"; data: null };

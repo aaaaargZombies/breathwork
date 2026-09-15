@@ -80,7 +80,10 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ Html.div []
+        [ Html.div
+            [ Html.Attributes.style "display" "flex"
+            , Html.Attributes.style "flex-direction" "column"
+            ]
             [ phaseView { msg = UserSetBreatheIn, get = Pattern.getBreatheIn, label = "Breathe In", pattern = model }
             , phaseView { msg = USerSetHoldIn, get = Pattern.getHoldIn, label = "Hold In", pattern = model }
             , phaseView { msg = UserSetBreatheOut, get = Pattern.getBreatheOut, label = "Breathe Out", pattern = model }

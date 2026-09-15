@@ -122,8 +122,9 @@ withPauseOutInternal n pattern =
 encode : Pattern -> Json.Encode.Value
 encode (Pattern { breatheIn, breatheOut, holdIn, pauseOut }) =
     Json.Encode.object
-        [ ( "breatheIn", Json.Encode.int breatheIn )
-        , ( "breatheOut", Json.Encode.int breatheOut )
-        , ( "holdIn", Json.Encode.int holdIn )
-        , ( "pauseOut", Json.Encode.int pauseOut )
+        -- NOTE: ensure order when converting object to array
+        [ ( "0_breatheIn", Json.Encode.int breatheIn )
+        , ( "1_holdIn", Json.Encode.int holdIn )
+        , ( "2_breatheOut", Json.Encode.int breatheOut )
+        , ( "3_pauseOut", Json.Encode.int pauseOut )
         ]
