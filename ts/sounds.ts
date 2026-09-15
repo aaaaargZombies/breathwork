@@ -11,10 +11,11 @@ const beatsPerCycle = (p: Pattern): number =>
   Object.values(p).reduce((a, b) => a + b);
 
 const setTempo =
-  (setCps) =>
-  (beatsPerCycle: number): void => {
-    setCps(60 / 60 / beatsPerCycle);
-  };
+  // really wish strudel had types
+  (setCps: any) =>
+    (beatsPerCycle: number): void => {
+      setCps(60 / 60 / beatsPerCycle);
+    };
 
 const buildCycle =
   (f: (entry: [string, number], index: number) => number[]) => (p: Pattern) => {
