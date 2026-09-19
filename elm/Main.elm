@@ -107,13 +107,18 @@ phaseView { msg, get, pattern, label } =
         ]
 
 
+subscriptions : Model -> Sub msg
+subscriptions _ =
+    Sub.none
+
+
 main : Program () Model Msg
 main =
     Browser.element
         { init = initialModel
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
 
