@@ -1,7 +1,7 @@
 module Main exposing (main)
 
 import Browser
-import Data exposing (Model)
+import Data exposing (Model, Playing(..))
 import Data.Pattern as Pattern exposing (Pattern)
 import Html exposing (Html, button, div, text)
 import Html.Attributes
@@ -11,7 +11,7 @@ import Remote
 
 initialModel : flags -> ( Model, Cmd Msg )
 initialModel _ =
-    ( { pattern = Pattern.init }, Cmd.none )
+    ( { pattern = Pattern.init, playing = Stopped }, Cmd.none )
 
 
 type Msg
@@ -27,7 +27,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         USerPressedPlay ->
-            ( model
+            ( { model | playing = Playing }
             , model.pattern
                 |> Remote.Play
                 |> Remote.outgoingValue
@@ -35,7 +35,7 @@ update msg model =
             )
 
         UserPressedStop ->
-            ( model
+            ( { model | playing = Stopped }
             , Remote.Stop
                 |> Remote.outgoingValue
                 |> Remote.outgoing
@@ -45,7 +45,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    { pattern = makeChoice Pattern.withBreatheIn choice model.pattern }
+                    { model | pattern = makeChoice Pattern.withBreatheIn choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -53,7 +53,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    { pattern = makeChoice Pattern.withBreatheOut choice model.pattern }
+                    { model | pattern = makeChoice Pattern.withBreatheOut choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -61,7 +61,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    { pattern = makeChoice Pattern.withHoldIn choice model.pattern }
+                    { model | pattern = makeChoice Pattern.withHoldIn choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -69,7 +69,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    { pattern = makeChoice Pattern.withPauseOut choice model.pattern }
+                    { model | pattern = makeChoice Pattern.withPauseOut choice model.pattern }
             in
             ( model_, Cmd.none )
 
