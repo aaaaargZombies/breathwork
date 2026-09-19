@@ -10,13 +10,6 @@ type Pattern = {
 const beatsPerCycle = (p: Pattern): number =>
   Object.values(p).reduce((a, b) => a + b);
 
-const setTempo =
-  // really wish strudel had types
-  (setCps: any) =>
-    (beatsPerCycle: number): void => {
-      setCps(60 / 60 / beatsPerCycle);
-    };
-
 const buildCycle =
   (f: (entry: [string, number], index: number) => number[]) => (p: Pattern) => {
     const a = Object.entries(p)
@@ -25,15 +18,18 @@ const buildCycle =
     return Strudel.sequence(...a);
   };
 
-export const make = (setCps: any, p: Pattern) => {
-  setTempo(setCps)(beatsPerCycle(p));
-  // plays note as many times per box key value
-  // note rizes in pitch on cycle change
+export const make = (p: Pattern) => {
   const cycle = buildCycle(([_key, n], i) => Array(n).fill(i))(p);
   const counter = Strudel.note(cycle)
     .scale("C:minor")
-    .sound("arpy")
-    .postgain(0.2);
+    .s("wt_birds")
+    .lpf(Strudel.perlin.range(100, 1000).slow(8))
+    .lpenv(-3)
+    .lpa(0.5)
+    .room(0.9)
+    .roomsize(1)
+    .fast(2)
+    .postgain(0.9);
 
   // silent until first beat of cycle
   const signalChange = buildCycle(([_key, n], _i) =>
@@ -41,5 +37,5 @@ export const make = (setCps: any, p: Pattern) => {
   )(p);
   const dings = Strudel.note(signalChange).sound("bleep").postgain(0.9);
 
-  return Strudel.stack(counter, dings);
+  return Strudel.stack(counter, dings).slow(beatsPerCycle(p) * 2);
 };
