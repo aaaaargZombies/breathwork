@@ -52,19 +52,10 @@ update msg model =
         UserToggledPlaying ->
             case model.playing of
                 Playing ->
-                    ( { model | playing = Stopped }
-                    , Remote.Stop
-                        |> Remote.outgoingValue
-                        |> Remote.outgoing
-                    )
+                    update UserPressedStop model
 
                 Stopped ->
-                    ( { model | playing = Playing }
-                    , model.pattern
-                        |> Remote.Play
-                        |> Remote.outgoingValue
-                        |> Remote.outgoing
-                    )
+                    update USerPressedPlay model
 
         UserSetBreatheIn choice ->
             let
