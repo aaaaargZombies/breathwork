@@ -1,8 +1,9 @@
 module Main exposing (main)
 
 import Browser
-import Data exposing (Model, Playing(..))
+import Data exposing (Model)
 import Data.Pattern as Pattern exposing (Pattern)
+import Data.Playing as Playing exposing (Playing(..))
 import Html exposing (Html, button, div, text)
 import Html.Attributes
 import Html.Events exposing (onClick)

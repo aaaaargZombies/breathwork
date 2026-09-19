@@ -1,14 +1,10 @@
-module Data exposing (Model, Playing(..))
+module Data exposing (Model)
 
 import Data.Pattern exposing (Pattern)
+import Data.Playing exposing (Playing)
 
 
 type alias Model =
     { pattern : Pattern
     , playing : Playing
     }
-
-
-type Playing
-    = Playing
-    | Stopped
