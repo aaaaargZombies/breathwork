@@ -1,6 +1,7 @@
 module Main exposing (main)
 
 import Browser
+import Data exposing (Model)
 import Data.Pattern as Pattern exposing (Pattern)
 import Html exposing (Html, button, div, text)
 import Html.Attributes
@@ -8,13 +9,9 @@ import Html.Events exposing (onClick)
 import Remote
 
 
-type alias Model =
-    Pattern
-
-
 initialModel : flags -> ( Model, Cmd Msg )
 initialModel _ =
-    ( Pattern.init, Cmd.none )
+    ( { pattern = Pattern.init }, Cmd.none )
 
 
 type Msg
@@ -31,7 +28,7 @@ update msg model =
     case msg of
         USerPressedPlay ->
             ( model
-            , model
+            , model.pattern
                 |> Remote.Play
                 |> Remote.outgoingValue
                 |> Remote.outgoing
@@ -48,7 +45,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    makeChoice Pattern.withBreatheIn choice model
+                    { pattern = makeChoice Pattern.withBreatheIn choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -56,7 +53,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    makeChoice Pattern.withBreatheOut choice model
+                    { pattern = makeChoice Pattern.withBreatheOut choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -64,7 +61,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    makeChoice Pattern.withHoldIn choice model
+                    { pattern = makeChoice Pattern.withHoldIn choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -72,22 +69,22 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    makeChoice Pattern.withPauseOut choice model
+                    { pattern = makeChoice Pattern.withPauseOut choice model.pattern }
             in
             ( model_, Cmd.none )
 
 
 view : Model -> Html Msg
-view model =
+view { pattern } =
     div []
         [ Html.div
             [ Html.Attributes.style "display" "flex"
             , Html.Attributes.style "flex-direction" "column"
             ]
-            [ phaseView { msg = UserSetBreatheIn, get = Pattern.getBreatheIn, label = "Breathe In", pattern = model }
-            , phaseView { msg = USerSetHoldIn, get = Pattern.getHoldIn, label = "Hold In", pattern = model }
-            , phaseView { msg = UserSetBreatheOut, get = Pattern.getBreatheOut, label = "Breathe Out", pattern = model }
-            , phaseView { msg = UserSetPauseOut, get = Pattern.getPauseOut, label = "Pause Out", pattern = model }
+            [ phaseView { msg = UserSetBreatheIn, get = Pattern.getBreatheIn, label = "Breathe In", pattern = pattern }
+            , phaseView { msg = USerSetHoldIn, get = Pattern.getHoldIn, label = "Hold In", pattern = pattern }
+            , phaseView { msg = UserSetBreatheOut, get = Pattern.getBreatheOut, label = "Breathe Out", pattern = pattern }
+            , phaseView { msg = UserSetPauseOut, get = Pattern.getPauseOut, label = "Pause Out", pattern = pattern }
             ]
         , div []
             [ button [ onClick USerPressedPlay ] [ text "Play" ]
@@ -129,7 +126,7 @@ makeChoice withA userInput pattern =
                 |> String.toInt
                 |> Maybe.withDefault 0
 
-        pattern_ : Model
+        pattern_ : Pattern
         pattern_ =
             withA n pattern
     in
