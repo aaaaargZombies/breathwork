@@ -1,12 +1,14 @@
 module Main exposing (main)
 
 import Browser
+import Browser.Events
 import Data exposing (Model)
 import Data.Pattern exposing (Pattern)
 import Data.Playing exposing (Playing(..))
 import Html exposing (Html, button, div, text)
 import Html.Attributes
 import Html.Events exposing (onClick)
+import Json.Decode
 import Remote
 
 
@@ -22,11 +24,16 @@ type Msg
     | UserSetBreatheOut String
     | USerSetHoldIn String
     | UserSetPauseOut String
+    | UserToggledPlaying
+    | NoOp
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        NoOp ->
+            ( model, Cmd.none )
+
         USerPressedPlay ->
             ( { model | playing = Playing }
             , model.pattern
@@ -41,6 +48,23 @@ update msg model =
                 |> Remote.outgoingValue
                 |> Remote.outgoing
             )
+
+        UserToggledPlaying ->
+            case model.playing of
+                Playing ->
+                    ( { model | playing = Stopped }
+                    , Remote.Stop
+                        |> Remote.outgoingValue
+                        |> Remote.outgoing
+                    )
+
+                Stopped ->
+                    ( { model | playing = Playing }
+                    , model.pattern
+                        |> Remote.Play
+                        |> Remote.outgoingValue
+                        |> Remote.outgoing
+                    )
 
         UserSetBreatheIn choice ->
             let
@@ -108,9 +132,23 @@ phaseView { msg, get, pattern, label } =
         ]
 
 
-subscriptions : Model -> Sub msg
+keyDecoder : Json.Decode.Decoder Msg
+keyDecoder =
+    Json.Decode.field "key" Json.Decode.string
+        |> Json.Decode.map
+            (\key ->
+                case key of
+                    " " ->
+                        UserToggledPlaying
+
+                    _ ->
+                        NoOp
+            )
+
+
+subscriptions : Model -> Sub Msg
 subscriptions _ =
-    Sub.none
+    Browser.Events.onKeyDown keyDecoder
 
 
 main : Program () Model Msg
