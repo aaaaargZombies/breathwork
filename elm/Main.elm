@@ -24,7 +24,6 @@ type Msg
     | UserSetBreatheOut String
     | USerSetHoldIn String
     | UserSetPauseOut String
-    | UserToggledPlaying
     | NoOp
 
 
@@ -48,14 +47,6 @@ update msg model =
                 |> Remote.outgoingValue
                 |> Remote.outgoing
             )
-
-        UserToggledPlaying ->
-            case model.playing of
-                Playing ->
-                    update UserPressedStop model
-
-                Stopped ->
-                    update USerPressedPlay model
 
         UserSetBreatheIn choice ->
             let
@@ -123,14 +114,14 @@ phaseView { msg, get, pattern, label } =
         ]
 
 
-keyDecoder : Json.Decode.Decoder Msg
-keyDecoder =
+keyDecoder : Msg -> Json.Decode.Decoder Msg
+keyDecoder msg =
     Json.Decode.field "key" Json.Decode.string
         |> Json.Decode.map
             (\key ->
                 case key of
                     " " ->
-                        UserToggledPlaying
+                        msg
 
                     _ ->
                         NoOp
@@ -138,8 +129,13 @@ keyDecoder =
 
 
 subscriptions : Model -> Sub Msg
-subscriptions _ =
-    Browser.Events.onKeyDown keyDecoder
+subscriptions { playing } =
+    case playing of
+        Playing ->
+            Browser.Events.onKeyDown (keyDecoder UserPressedStop)
+
+        Stopped ->
+            Browser.Events.onKeyDown (keyDecoder USerPressedPlay)
 
 
 main : Program () Model Msg
