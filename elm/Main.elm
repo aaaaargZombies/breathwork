@@ -2,8 +2,8 @@ module Main exposing (main)
 
 import Browser
 import Data exposing (Model)
-import Data.Pattern as Pattern exposing (Pattern)
-import Data.Playing as Playing exposing (Playing(..))
+import Data.Pattern exposing (Pattern)
+import Data.Playing exposing (Playing(..))
 import Html exposing (Html, button, div, text)
 import Html.Attributes
 import Html.Events exposing (onClick)
@@ -12,7 +12,7 @@ import Remote
 
 initialModel : flags -> ( Model, Cmd Msg )
 initialModel _ =
-    ( { pattern = Pattern.init, playing = Stopped }, Cmd.none )
+    ( { pattern = Data.Pattern.init, playing = Stopped }, Cmd.none )
 
 
 type Msg
@@ -46,7 +46,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    { model | pattern = makeChoice Pattern.withBreatheIn choice model.pattern }
+                    { model | pattern = makeChoice Data.Pattern.withBreatheIn choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -54,7 +54,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    { model | pattern = makeChoice Pattern.withBreatheOut choice model.pattern }
+                    { model | pattern = makeChoice Data.Pattern.withBreatheOut choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -62,7 +62,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    { model | pattern = makeChoice Pattern.withHoldIn choice model.pattern }
+                    { model | pattern = makeChoice Data.Pattern.withHoldIn choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -70,7 +70,7 @@ update msg model =
             let
                 model_ : Model
                 model_ =
-                    { model | pattern = makeChoice Pattern.withPauseOut choice model.pattern }
+                    { model | pattern = makeChoice Data.Pattern.withPauseOut choice model.pattern }
             in
             ( model_, Cmd.none )
 
@@ -82,10 +82,10 @@ view { pattern } =
             [ Html.Attributes.style "display" "flex"
             , Html.Attributes.style "flex-direction" "column"
             ]
-            [ phaseView { msg = UserSetBreatheIn, get = Pattern.getBreatheIn, label = "Breathe In", pattern = pattern }
-            , phaseView { msg = USerSetHoldIn, get = Pattern.getHoldIn, label = "Hold In", pattern = pattern }
-            , phaseView { msg = UserSetBreatheOut, get = Pattern.getBreatheOut, label = "Breathe Out", pattern = pattern }
-            , phaseView { msg = UserSetPauseOut, get = Pattern.getPauseOut, label = "Pause Out", pattern = pattern }
+            [ phaseView { msg = UserSetBreatheIn, get = Data.Pattern.getBreatheIn, label = "Breathe In", pattern = pattern }
+            , phaseView { msg = USerSetHoldIn, get = Data.Pattern.getHoldIn, label = "Hold In", pattern = pattern }
+            , phaseView { msg = UserSetBreatheOut, get = Data.Pattern.getBreatheOut, label = "Breathe Out", pattern = pattern }
+            , phaseView { msg = UserSetPauseOut, get = Data.Pattern.getPauseOut, label = "Pause Out", pattern = pattern }
             ]
         , div []
             [ button [ onClick USerPressedPlay ] [ text "Play" ]
