@@ -20,22 +20,16 @@ const buildCycle =
 
 export const make = (p: Pattern) => {
   const cycle = buildCycle(([_key, n], i) => Array(n).fill(i))(p);
-  const counter = Strudel.note(cycle)
+  const counter = Strudel.note(cycle.add(2))
     .scale("C:minor")
-    .s("wt_birds")
-    .lpf(Strudel.perlin.range(100, 1000).slow(8))
-    .lpenv(-3)
-    .lpa(0.5)
-    .room(0.9)
-    .roomsize(1)
-    .fast(2)
-    .postgain(0.9);
+    .sound("dantranh_vibrato")
+    .postgain(0.8);
 
   // silent until first beat of cycle
   const signalChange = buildCycle(([_key, n], _i) =>
     n < 1 ? [] : [2, ...Array(n - 1).fill("~")],
   )(p);
-  const dings = Strudel.note(signalChange).sound("bleep").postgain(0.9);
+  const dings = Strudel.note(signalChange).sound("handbells").postgain(1);
 
   return Strudel.stack(counter, dings).slow(beatsPerCycle(p) * 2);
 };
