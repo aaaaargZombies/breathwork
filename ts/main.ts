@@ -10,6 +10,10 @@ const app = Elm.Main.init({
 const repl = await Strudel.initStrudel({
   prebake: async () => {
     await Strudel.samples("github:tidalcycles/dirt-samples");
+    await Strudel.samples(
+      "https://raw.githubusercontent.com/felixroos/dough-samples/main/vcsl.json",
+    );
+    await Strudel.samples("github:bubobubobubobubo/dough-waveforms");
   },
 });
 
