@@ -18,7 +18,6 @@
     "vitest": "^5.0.0"
   },
   "dependencies": {
-    "@strudel/soundfonts": "^1.3.0",
     "@strudel/web": "^1.3.0"
   }
 }
