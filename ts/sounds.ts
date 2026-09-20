@@ -1,12 +1,5 @@
 import * as Strudel from "@strudel/web";
 
-type Pattern = {
-  "0_breatheIn": number;
-  "1_holdIn": number;
-  "2_breatheOut": number;
-  "3_pauseOut": number;
-};
-
 const beatsPerCycle = (p: Pattern): number =>
   Object.values(p).reduce((a, b) => a + b);
 

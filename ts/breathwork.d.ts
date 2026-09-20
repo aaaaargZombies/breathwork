@@ -1,3 +1,5 @@
+declare module "@strudel/web";
+
 declare module "*.elm" {
   namespace Elm {
     namespace Main {
@@ -25,11 +27,13 @@ declare module "*.elm" {
 type Outgoing =
   | {
       tag: "PLAY";
-      data: {
-        "0_breatheIn": number;
-        "1_holdIn": number;
-        "2_breatheOut": number;
-        "3_pauseOut": number;
-      };
+      data: Pattern;
     }
   | { tag: "STOP"; data: null };
+
+type Pattern = {
+  "0_breatheIn": number;
+  "1_holdIn": number;
+  "2_breatheOut": number;
+  "3_pauseOut": number;
+};
