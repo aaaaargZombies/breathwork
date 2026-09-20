@@ -25,7 +25,6 @@ if (app.ports && app.ports.outgoing) {
   app.ports.outgoing.subscribe(async ({ tag, data }) => {
     switch (tag) {
       case "PLAY":
-        Sounds.make(repl.setCps, data).play();
         Sounds.make(data).play();
         break;
 
