@@ -3,7 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    elm.url = "github:aaaaargZombies/elm-flake";
     elm2nix.url = "github:dwayne/elm2nix";
     git-hooks.url = "github:cachix/git-hooks.nix";
   };
@@ -11,7 +10,6 @@
   outputs =
     {
       self,
-      elm,
       elm2nix,
       git-hooks,
       ...
@@ -74,7 +72,7 @@
                 with pkgs;
                 [
                   self.formatter.${system}
-                  elm.packages.${system}.default
+                  pkgs.elmPackages.elm
                   pkgs.elmPackages.elm-test-rs
                   elm2nix.packages.${system}.default
                   pkgs.nodejs_26
@@ -92,7 +90,7 @@
             name = "Site";
 
             nativeBuildInputs = [
-              elm.packages.${system}.default
+              pkgs.elmPackages.elm
               elm2nix.packages.${system}.default
               pkgs.nodejs_26
               perSystem.${system}.prepElmHome
